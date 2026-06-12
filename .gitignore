@@ -1,0 +1,33 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+
+# Env files — never commit secrets
+.env
+.env.local
+.env.*.local
+
+# SQLite database
+prisma/*.db
+prisma/**/*.db
+prisma/*.db-journal
+prisma/*.db-shm
+prisma/*.db-wal
+
+# TypeScript build info
+tsconfig.tsbuildinfo
+
+# macOS
+.DS_Store

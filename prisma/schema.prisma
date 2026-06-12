@@ -1,0 +1,77 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model PlaidItem {
+  id              String    @id @default(cuid())
+  userId          String
+  itemId          String    @unique
+  accessToken     String
+  institutionName String?
+  institutionId   String?
+  createdAt       DateTime  @default(now())
+
+  accounts Account[]
+}
+
+model Account {
+  id               String   @id @default(cuid())
+  userId           String
+  itemId           String
+  accountId        String   @unique
+  name             String
+  officialName     String?
+  type             String
+  subtype          String?
+  mask             String   @default("")
+  currentBalance   Float    @default(0)
+  availableBalance Float?
+  creditLimit      Float?
+  institutionName  String   @default("")
+  institutionColor String   @default("#7c3aed")
+  institutionLogo  String?
+  updatedAt        DateTime @updatedAt
+
+  plaidItem    PlaidItem     @relation(fields: [itemId], references: [itemId], onDelete: Cascade)
+  transactions Transaction[]
+}
+
+model Transaction {
+  id               String   @id @default(cuid())
+  userId           String
+  accountId        String
+  transactionId    String   @unique
+  amount           Float
+  date             String
+  name             String
+  merchantName     String?
+  category         String   @default("[]")
+  primaryCategory  String   @default("Other")
+  detailedCategory String   @default("Other")
+  logoUrl          String?
+  pending          Boolean  @default(false)
+  paymentChannel   String   @default("other")
+  isManual         Boolean  @default(false)
+  notes            String?
+  createdAt        DateTime @default(now())
+
+  account Account? @relation(fields: [accountId], references: [accountId], onDelete: Cascade)
+}
+
+model Budget {
+  id          String   @id @default(cuid())
+  userId      String
+  category    String
+  limitAmount Float
+  period      String   @default("monthly")
+  color       String   @default("#7c3aed")
+  icon        String   @default("📦")
+  createdAt   DateTime @default(now())
+
+  @@unique([userId, category, period])
+}
